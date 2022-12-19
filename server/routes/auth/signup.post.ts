@@ -6,7 +6,7 @@ import * as argon from 'argon2'
 
 const prisma = new PrismaClient()
 
-const userSignUpData = z.object({
+const SignUpDto = z.object({
   email: z.string().email(),
   password: z.string().min(4),
   name: z.string().regex(/^[a-zA-Z]+\s[a-zA-Z]+$/),
@@ -15,7 +15,7 @@ const userSignUpData = z.object({
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
-    const validatedBody = userSignUpData.parse(body)
+    const validatedBody = SignUpDto.parse(body)
     validatedBody.password = await argon.hash(validatedBody.password)
     await prisma.user.create({
       data: validatedBody,
@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
       event.node.res.statusCode = 422
       return { 'error': fromZodError(error) }
     }
+    event.node.res.statusCode = 500
     return { 'error': 'Something went wrong' }
   }
 })

@@ -57,6 +57,8 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 
+const router = useRouter()
+
 const errorMessage: Ref<string> = ref('')
 const confirmPassword: Ref<string> = ref('')
 const registerData: Ref<RegisterData> = ref({
@@ -78,8 +80,10 @@ const onSignUp = () => {
   }
   fetch('/auth/signup/', { method: 'POST', body: JSON.stringify(registerData.value) })
     .then((response) => {
-      return response.json()
+      if (response.status === 201) {
+        router.push('/')
+      }
     })
-    .then((json) => console.log(json))
+    .catch((error) => console.log(error))
 }
 </script>
