@@ -11,6 +11,7 @@
           class="input-primary"
           v-model="registerData.name"
           required
+          autocomplete="name"
         />
       </div>
       <div class="flex flex-col gap-2">
@@ -21,6 +22,7 @@
           class="input-primary"
           v-model="registerData.email"
           required
+          autocomplete="email"
         />
       </div>
       <div class="flex flex-col gap-2">
@@ -74,8 +76,10 @@ const onSignUp = () => {
     errorMessage.value = 'Password does not match!'
     return
   }
-  fetch('/auth/signup/', { method: 'POST', body: JSON.stringify(registerData.value) }).then((response) => {
-    console.log(response)
-  })
+  fetch('/auth/signup/', { method: 'POST', body: JSON.stringify(registerData.value) })
+    .then((response) => {
+      return response.json()
+    })
+    .then((json) => console.log(json))
 }
 </script>

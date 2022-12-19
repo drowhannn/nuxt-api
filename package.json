@@ -15,6 +15,8 @@
   },
   "dependencies": {
     "@prisma/client": "^4.7.1",
-    "prisma": "^4.7.1"
+    "prisma": "^4.7.1",
+    "zod": "^3.20.2",
+    "zod-validation-error": "^0.2.2"
   }
 }
