@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { z, ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
+import * as argon from 'argon2'
 
 const prisma = new PrismaClient()
 
@@ -15,6 +16,7 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
     const validatedBody = userSignUpData.parse(body)
+    validatedBody.password = await argon.hash(validatedBody.password)
     await prisma.user.create({
       data: validatedBody,
     })
