@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-screen grid place-content-center text-blue-500">
-    <form class="px-6 py-2 border rounded-md flex flex-col gap-2 w-96" @submit.prevent="onSignUp">
+    <form class="px-6 py-2 border rounded-md flex flex-col shadow-md gap-2 w-96" @submit.prevent="onSignUp">
       <h1 class="text-3xl uppercase font-extrabold text-center">Sign Up</h1>
       <div class="flex flex-col gap-2">
         <label for="text" class="font-bold text-base">Name:</label>

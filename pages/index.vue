@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-screen grid place-content-center text-blue-500">
-    <form @submit.prevent="onLogin" class="px-6 py-2 border rounded-md flex flex-col gap-2 w-96">
+    <form @submit.prevent="onLogin" class="px-6 py-2 border rounded-md flex flex-col shadow-md gap-2 w-96">
       <h1 class="text-3xl uppercase font-extrabold text-center">Login</h1>
       <div class="flex flex-col gap-2">
         <label for="email" class="font-bold text-base">Email:</label>
