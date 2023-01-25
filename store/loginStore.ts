@@ -19,9 +19,10 @@ export const useLoginStore = defineStore(
     const onLogOut = (): void => {
       userEmail.value = ''
       token.value = ''
+      navigateTo('/')
     }
 
-    return { userEmail, token, isLoggedIn, onLogIn }
+    return { userEmail, token, isLoggedIn, onLogIn, onLogOut }
   },
   { persist: true }
 )

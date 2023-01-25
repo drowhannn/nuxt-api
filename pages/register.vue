@@ -24,7 +24,6 @@
       </div>
       <p class="h-8 w-full text-red-500 text-sm">{{ errorMessage }}</p>
       <button class="btn-primary" :disabled="disableSignUpButton">Sign Up</button>
-      <p class="text-sm text-blue-700 underline text-right">Forgot your Password?</p>
       <NuxtLink to="/">
         <p class="text-sm text-blue-700 underline text-right">Already have an account? Log In</p>
       </NuxtLink>

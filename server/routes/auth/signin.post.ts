@@ -3,6 +3,9 @@ import { z, ZodError } from 'zod'
 import * as argon from 'argon2'
 import { fromZodError } from 'zod-validation-error'
 import jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer'
+
+const config = useRuntimeConfig()
 
 const prisma = new PrismaClient()
 
@@ -24,12 +27,15 @@ export default defineEventHandler(async (event) => {
     })
     if (!user) {
       event.node.res.statusCode = 404
-      return { 'error': 'User not found' }
+      return { status: 'error', message: 'User not found' }
+    } else if (!user.isVerified) {
+      event.node.res.statusCode = 404
+      return { status: 'error', message: 'User not found' }
     } else {
       const pwMatch = await argon.verify(user.password, validatedBody.password)
       if (!pwMatch) {
         event.node.res.statusCode = 401
-        return { 'error': 'Password incorrect' }
+        return { status: 'error', message: 'Invalid credentials' }
       }
       const token = jwt.sign(
         {
@@ -45,9 +51,9 @@ export default defineEventHandler(async (event) => {
     console.log(error)
     if (error instanceof ZodError) {
       event.node.res.statusCode = 422
-      return { 'error': fromZodError(error) }
+      return { status: 'error', message: fromZodError(error) }
     }
     event.node.res.statusCode = 500
-    return { 'error': 'Something went wrong' }
+    return { status: 'error', message: 'Something went wrong' }
   }
 })
