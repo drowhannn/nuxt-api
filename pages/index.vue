@@ -25,9 +25,11 @@
           v-model="loginData.password"
         />
       </div>
-      <button class="btn-primary">Login</button>
+      <button class="btn-primary" :disabled="isLoginButtonDisabled">Login</button>
       <p class="text-sm text-blue-700 underline text-right">Forgot your Password?</p>
-      <NuxtLink to="/register"><p class="text-sm text-blue-700 underline text-right">Sign Up</p></NuxtLink>
+      <NuxtLink to="/register"
+        ><p class="text-sm text-blue-700 underline text-right">Don't have an account? Sign Up</p></NuxtLink
+      >
     </form>
   </div>
 </template>
@@ -36,6 +38,9 @@
 import { Ref } from 'vue'
 import { useLoginStore } from '~/store/loginStore'
 
+const isLoginButtonDisabled = ref(false)
+
+const { $showToast, $hideToast } = useNuxtApp()
 const loginStore = useLoginStore()
 const router = useRouter()
 
@@ -49,18 +54,21 @@ const loginData: Ref<LoginData> = ref({
   password: '',
 })
 
-const onLogin = () => {
-  fetch('/auth/signin', { method: 'POST', body: JSON.stringify(loginData.value) })
-    .then((response) => {
-      return response.json()
-    })
-    .then((json) => {
-      if (json?.token) {
-        loginStore.onLogIn(loginData.value.email, json.token)
-        router.push('/home')
-      } else {
-        console.log(json.error)
-      }
-    })
+const onLogin = async () => {
+  isLoginButtonDisabled.value = true
+  const savingToast = $showToast('Logging in...', 'info', false)
+  const response = await fetch('/auth/signin', { method: 'POST', body: JSON.stringify(loginData.value) })
+  const json = await response.json()
+  $hideToast(savingToast)
+  if (response.status === 200) {
+    loginStore.onLogIn(loginData.value.email, json.token)
+    $showToast('Logged in successfully', 'success', 2000)
+    router.push('/home')
+  } else if (response.status === 404) {
+    $showToast('User with given email not found', 'error', 2000)
+  } else if (response.status === 401) {
+    $showToast('Incorrect password', 'error', 2000)
+  }
+  isLoginButtonDisabled.value = false
 }
 </script>

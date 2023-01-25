@@ -11,11 +11,13 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  name     String
-  posts    Post[]
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String
+  name       String
+  posts      Post[]
+  isVerified Boolean  @default(false)
+  UserOTP    UserOTP?
 }
 
 model Post {
@@ -27,4 +29,14 @@ model Post {
   authorId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UserOTP {
+  id        Int      @id @default(autoincrement())
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userEmail String   @unique
+  user      User     @relation(fields: [userEmail], references: [email])
 }
